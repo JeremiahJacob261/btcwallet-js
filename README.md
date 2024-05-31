@@ -1,7 +1,7 @@
 <h1>This is a BTC wallet handler using JavaScript</h1>
 <p>This creates a btc wallet and returns a publicAddress and a private key</p><br/>
 <br/>
-<p>API REFERENCE </p>
+<h2>API REFERENCE </h2>
 
 <caption> 
 This is a start of the api reference
@@ -26,6 +26,8 @@ curl -H "Custom-Header: Value" https://btcwallet-js.onrender.com/createwallet
 curl -X GET "https://btcwallet-js.onrender.com/checkbalance?address=1JbtPxAS6UNwZnNE7ww1KuXCcUQDG3gHVU"
 ```
 
+
+<h2>USE LOCALLY </h2>
 <p>Packages to install</p>
 
 ```bash
