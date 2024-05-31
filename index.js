@@ -6,7 +6,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const createWallet = () => {
+const createWallet = async () => {
 
     try {
         var wallet = new CoinKey.createRandom();  //this code automatically creates a new wallet address and returns a private key and public address
@@ -86,7 +86,7 @@ app.get('/', (req, res) => {
   res.send({'status':'success','message' : 'Welcome to the BTC Wallet API'});
 });
 
-app.get('/createwallet', (req, res) => {
+app.get('/createwallet', async (req, res) => {
   createWallet().then((data)=>{
     if(data == "error occured"){
       res.send({'status':'error','message' : 'An error occured'});
@@ -102,15 +102,16 @@ app.get('/createwallet', (req, res) => {
 
 });
 
-app.post('/checkbalance', (req, res) => {
-  const body = req.body;
-  const address = body.address;
+app.get('/checkbalance', async(req, res) => {
+  const body = req.query;
+  console.log(body);
   try {
+  const address = body.address;
     getWalletBalance(address).then((data)=>{
       if (data == 'error occured') {
         res.send({'status':'error','message' : 'An error occured'});
       } else {
-        res.send({'status':'success','message':'Balance retrieved sucessfully','data':data});
+        res.send({'status':'success','message':'Balance retrieved sucessfully','data':{"balance":data,"address":address}});
       }
     }).catch((error)=>{ 
       console.log(error);
