@@ -2,6 +2,9 @@ var CoinKey = require('coinkey');
 const axios = require('axios');
 const bitcore = require('bitcore-explorers');
 const bitcoin = require('bitcoinjs-lib');
+const express = require('express');
+const app = express();
+const port = 3000;
 
 const createWallet = () => {
 
@@ -14,11 +17,12 @@ const createWallet = () => {
         //public addresss is the BTC wallet address that will receive funds
         //private key is the key that will be used to sign transactions - more like a password, please store securely
 
-        //return wallet;
+        return {"privateKey":wallet.privateKey.toString('hex'),"publicAddress":wallet.publicAddress};
     } catch (e) {
                 //handle errors
                 //please handle errors in this location 
                 console.log(e);
+                return "error occured";
     }
 
 }
@@ -35,7 +39,7 @@ async function getWalletBalance(address) {
         return balance;
       } catch (error) {
         console.error('Error fetching balance:', error.message);
-        return null;
+        return 'error occured';
       }
 }
 
@@ -78,3 +82,45 @@ async function sendBTC(fromAddress, toAddress, amountInBTC) {
 }
 
 // sendBTC('fromAddressHere', 'toAddressHere', 0.01);
+app.get('/', (req, res) => {
+  res.send({'status':'success','message' : 'Welcome to the BTC Wallet API'});
+});
+
+app.get('/createwallet', (req, res) => {
+  createWallet().then((data)=>{
+    if(data == "error occured"){
+      res.send({'status':'error','message' : 'An error occured'});
+    }else{
+      res.send({'status':'success','message' : 'Wallet Created Successfully','data':data});
+    }
+  }).catch((error)=>{ 
+
+    console.log(error);
+  res.send({'status':'error','message' : 'An error occured'});
+  });
+
+
+});
+
+app.post('/checkbalance', (req, res) => {
+  const body = req.body;
+  const address = body.address;
+  try {
+    getWalletBalance(address).then((data)=>{
+      if (data == 'error occured') {
+        res.send({'status':'error','message' : 'An error occured'});
+      } else {
+        res.send({'status':'success','message':'Balance retrieved sucessfully','data':data});
+      }
+    }).catch((error)=>{ 
+      console.log(error);
+      res.send({'status':'error','message' : 'An error occured'});
+    });
+  } catch (error) {
+    res.send({'status':'error','message' : 'An error occured'});
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
