@@ -20,10 +20,10 @@ curl -H "Custom-Header: Value" https://btcwallet-js.onrender.com/createwallet
 ```
 
 <p>2. See Balance</p>
-<i>make a GET REQUEST to http://localhost:3000/checkbalance?address=1JbtPxAS6UNwZnNE7ww1KuXCcUQDG3gHVU</i>
+<i>make a GET REQUEST to https://btcwallet-js.onrender.com/checkbalance?address=1JbtPxAS6UNwZnNE7ww1KuXCcUQDG3gHVU</i>
 
 ```sh
-curl -X GET "http://localhost:3000/checkbalance?address=1JbtPxAS6UNwZnNE7ww1KuXCcUQDG3gHVU"
+curl -X GET "https://btcwallet-js.onrender.com/checkbalance?address=1JbtPxAS6UNwZnNE7ww1KuXCcUQDG3gHVU"
 ```
 
 <p>Packages to install</p>
