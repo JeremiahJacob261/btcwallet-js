@@ -1,5 +1,6 @@
 var CoinKey = require('coinkey');
 const axios = require('axios');
+const bitcore = require('bitcore-explorers');
 const bitcoin = require('bitcoinjs-lib');
 
 const createWallet = () => {
@@ -21,21 +22,32 @@ const createWallet = () => {
     }
 
 }
+// createWallet();
+// the createWallet function will return a private key and public address, please store the private key securely and do not share it with anyone
+//please store up the address you generated in the createWallet in a secure database, retrieve the address and pass it to the getWalletBalance function
 
 
-async function showBalance(address) {
-  try {
-    const response = await axios.get(`https://api.sochain.com/v2/get_balance/BTC/${address}`);
-    console.log(`Balance: ${response.data.data.balance} BTC`);
-  } catch (error) {
-    console.error('Failed to fetch balance:', error.message);
-  }
+async function getWalletBalance(address) {
+    try {
+        const response = await axios.get(`https://api.blockcypher.com/v1/btc/main/addrs/${address}`);
+        const balance = response.data.final_balance / 1e8; // Convert satoshis to BTC
+        console.log(`Balance: ${balance} BTC`);
+        return balance;
+      } catch (error) {
+        console.error('Error fetching balance:', error.message);
+        return null;
+      }
 }
 
-// showBalance('yourBitcoinAddressHere');
 
+// getWalletBalance('1KWBoPVCpVYDACyCiWwF5WZ9ZiqAsWg7VV').then((data)=>{
+//     console.log(data);
+// }).catch((error)=>{ 
+//     console.log(error);
+// });
 
-//please store up the address you generated in the createWallet in a database, retrieve the address and pass it to the showBalance function
+//uncomment the getWalletBalance function and pass the public address generated in the createWallet function to get the balance of the wallet
+
 
 
 async function sendBTC(fromAddress, toAddress, amountInBTC) {
