@@ -2,6 +2,7 @@ var CoinKey = require('coinkey');
 const axios = require('axios');
 const bitcore = require('bitcore-explorers');
 const bitcoin = require('bitcoinjs-lib');
+const QRCode = require('qrcode');
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -84,6 +85,36 @@ async function sendBTC(fromAddress, toAddress, amountInBTC) {
 // sendBTC('fromAddressHere', 'toAddressHere', 0.01);
 app.get('/', (req, res) => {
   res.send({'status':'success','message' : 'Welcome to the BTC Wallet API'});
+});
+
+app.get('/generateqr', (req, res) => {
+  const body = req.query;
+  const btcAddress = body.wallet;
+  console.log(body)
+  async function generateQRCodeImage() {
+    try {
+      const qrCodeUrl = await QRCode.toDataURL(btcAddress);
+      console.log(`QR Code URL: ${qrCodeUrl}`);
+      return qrCodeUrl;
+      // Optionally, save the QR code image to a file
+      // fs.writeFileSync('btcAddress.qrcode.png', qrCodeUrl);
+    } catch (err) {
+      console.error(err);
+      return 'erroroccured'
+    }
+  }
+  generateQRCodeImage().then((data)=>{
+      if(data == 'erroroccured'){
+        res.send({'status':'failed','message' : 'An error occured'});
+      }else{
+        res.send({'status':'success','message' : {'wallet':btcAddress,'imageurl':data}});
+      }
+  }).catch((e)=>{
+    console.log(e);
+    res.send({'status':'failed','message' : 'An error occured','error':e});
+  });
+
+  
 });
 
 app.get('/createwallet', async (req, res) => {

@@ -14,7 +14,8 @@
     "bitcore-explorers": "^1.0.1",
     "bitcore-lib": "^10.0.36",
     "coinkey": "^3.0.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "qrcode": "^1.5.3"
   },
   "devDependencies": {
     "axios": "^1.7.2"
